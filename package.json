@@ -24,9 +24,7 @@
     "url": "https://github.com/tilgovi/dom-anchor-text-position/issues"
   },
   "homepage": "https://github.com/tilgovi/dom-anchor-text-position",
-  "dependencies": {
-    "dom-node-iterator": "^3.5.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.11.4",
     "babel-eslint": "^6.1.2",

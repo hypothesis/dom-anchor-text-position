@@ -1,5 +1,3 @@
-import createNodeIterator from 'dom-node-iterator'
-
 import rangeToString from './range-to-string'
 
 const SHOW_TEXT = 4
@@ -51,18 +49,31 @@ export function toRange(root, selector = {}) {
   let endOffset = 0
 
   // Iterate over text nodes and find where the start and end positions occur.
-  let iter = createNodeIterator(root, SHOW_TEXT)
-  while (iter.nextNode() && (startContainer === null || endContainer === null)) {
-    let nodeTextLength = iter.referenceNode.nodeValue.length
+  const iter = root.ownerDocument.createNodeIterator(
+    root,
+    SHOW_TEXT,
+
+    // The `filter` and `expandEntityReferences` arguments are mandatory in IE
+    // even though the spec says they are optional.
+    null /* filter */,
+    false /* expandEntityReferences */
+  );
+
+  // `NodeIterator.referenceNode` does not exist in IE 11, so capture the return
+  // value from `nextNode` instead.
+  let referenceNode;
+  while ((referenceNode = iter.nextNode()) &&
+         (startContainer === null || endContainer === null)) {
+    let nodeTextLength = referenceNode.nodeValue.length
 
     if (startContainer === null &&
         start >= nodeTextOffset && start <= nodeTextOffset + nodeTextLength) {
-      startContainer = iter.referenceNode
+      startContainer = referenceNode
       startOffset = start - nodeTextOffset
     }
     if (endContainer === null &&
         end >= nodeTextOffset && end <= nodeTextOffset + nodeTextLength) {
-      endContainer = iter.referenceNode
+      endContainer = referenceNode
       endOffset = end - nodeTextOffset
     }
 
